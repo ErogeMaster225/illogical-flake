@@ -87,6 +87,30 @@ in
           fi
         done
 
+        # Special handling for hypr directory - preserve custom/ subdirectory
+        if [ "$itemName" = "hypr" ]; then
+          $DRY_RUN_CMD mkdir -p "$targetItem"
+
+          # Copy all items except custom/ subdirectory
+          for subitem in "$item"/*; do
+            subname=$(basename "$subitem")
+            if [ "$subname" != "custom" ]; then
+              subitemTarget="$targetItem/$subname"
+
+              # Remove existing subitem if it exists
+              if [ -e "$subitemTarget" ] || [ -L "$subitemTarget" ]; then
+                $DRY_RUN_CMD rm -rf "$subitemTarget"
+              fi
+
+              $DRY_RUN_CMD cp -r "$subitem" "$subitemTarget"
+              $DRY_RUN_CMD chmod -R u+w "$subitemTarget"
+            fi
+          done
+
+          echo "Copied hypr config (preserved custom/ directory)"
+          skip=true
+        fi
+
         if [ "$skip" = true ]; then
           continue
         fi
