@@ -74,6 +74,7 @@ EOF
       kdePackages.qtwayland
       kdePackages.qtwebsockets
       kdePackages.syntax-highlighting
+      kdePackages.kirigami
     ];
   };
 }
